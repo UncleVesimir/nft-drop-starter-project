@@ -1,0 +1,20 @@
+{
+  "name": "warholNey",
+  "symbol": "SNN",
+  "image": "1.png",
+  "properties": {
+    "files": [
+      {
+        "uri": "1.png",
+        "type": "image/png"
+      }
+    ],
+    "creators": [
+      {
+        "address": "DSTGEeBwN1HQZPjCP6zTPnaoybtznK5BUv7aVJLaCS3Q",
+        "share": 100
+      }
+    ]
+  },
+  "collection": { "name": "SpaceNeyNeys", "family": "SpaceNeyNeys" }
+}
