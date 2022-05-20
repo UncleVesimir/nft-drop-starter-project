@@ -63,6 +63,7 @@ const App = () => {
       window.removeEventListener("load", onLoad);
     };
   }, []);
+  
   return (
     <div className="App">
       <div className="container">

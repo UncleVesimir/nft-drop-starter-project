@@ -14,6 +14,8 @@ import {
   CIVIC,
 } from "./helpers";
 
+import CountdownTimer from "../CountdownTimer/CountdownTimer";
+
 const { SystemProgram } = web3;
 const opts = {
   preflightCommitment: "processed",
@@ -24,6 +26,7 @@ const CandyMachine = ({ walletAddress }) => {
   useEffect(() => {
     getCandyMachineState();
   }, []);
+  //Mint Logic + Helper Functions
 
   const getProvider = () => {
     const rpcHost = process.env.REACT_APP_SOLANA_RPC_HOST;
@@ -104,8 +107,8 @@ const CandyMachine = ({ walletAddress }) => {
     });
   };
 
-  const getCandyMachineCreator = async () => {
-    const candyMachineID = new PublicKey(candyMachine);
+  const getCandyMachineCreator = async (candyMachineAddress) => {
+    const candyMachineID = new PublicKey(candyMachineAddress);
     return await web3.PublicKey.findProgramAddress(
       [Buffer.from("candy_machine"), candyMachineID.toBuffer()],
       candyMachineProgram
@@ -169,7 +172,7 @@ const CandyMachine = ({ walletAddress }) => {
     });
   };
 
-  const mintToken = async (candyMachine) => {
+  const mintToken = async () => {
     const mint = web3.Keypair.generate();
 
     const userTokenAccountAddress = (
@@ -387,14 +390,34 @@ const CandyMachine = ({ walletAddress }) => {
     return [];
   };
 
+  const renderDropTimer = () => {
+
+    const currentDate = new Date();
+    const dropDate = new Date(candyMachine.state.goLiveData * 1000)
+
+    if(currentDate < dropDate) {
+      console.log("Before Drop Date!");
+      return <CountdownTimer dropDate={dropDate} />
+    }
+
+    return <p> {"It's here. Mint Now"}</p>
+  }
+
   return (
+    (candyMachine && candyMachine.state && (
     <div className="machine-container">
-      <p>{`Drop Date: ${candyMachine.state.goLiveDateTimeString}`}</p>
+      {renderDropTimer()}
       <p>{`Items Minted: ${candyMachine.state.itemsRedeemed} / ${candyMachine.state.itemsAvailable}`}</p>
-      <button className="cta-button mint-button" onClick={mintToken}>
+      {candyMachine.state.itemsRedeemed === candyMachine.state.itemsAvailable ? 
+      (
+        <p className="sub-text">Sold Out 🙊</p>
+      ) : (<button className="cta-button mint-button" onClick={mintToken}>
         Mint NFT
-      </button>
+      </button>)}
+      {/* {mints.length > 0 && renderMintedItems()}
+      {isLoadingMints && <p> LOADING MINTS...</p>} */}
     </div>
+    )) || null
   );
 };
 
